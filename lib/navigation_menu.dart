@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:food_store/features/authentication/screens/home_screen/home.dart';
 import 'package:food_store/utils/constants/colors.dart';
 import 'package:food_store/utils/helper/helper_functions.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
+
 class BottomNavigationMenu extends StatelessWidget {
-  const BottomNavigationMenu({super.key});
+  const BottomNavigationMenu({Key? key}): super(key:key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +49,9 @@ class BottomNavigationMenu extends StatelessWidget {
 
 class NavigationController extends GetxController {
   final RxInt index = 0.obs;
-
+  
   final screens = [
-    const Center(child: Text("home")),
-    const Center(child: Text("shop")),
-    const Center(child: Text("cart")),
-    const Center(child: Text("profile")),
+   const HomeVendor(),
   ];
 }
+

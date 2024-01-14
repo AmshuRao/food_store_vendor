@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_store/features/authentication/screens/home_screen/home.dart';
 import 'package:food_store/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:food_store/utils/theme/theme.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,7 @@ class App extends StatelessWidget {
       darkTheme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
       // initialBinding: GeneralBindings(),
-      home: const OnBoardingScreen(),
+      home: const HomeVendor(),
     );
   }
 }

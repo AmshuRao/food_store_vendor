@@ -34,7 +34,8 @@ class LoginForm extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => Get.to(() => const BottomNavigationMenu()),
+              // ignore: prefer_const_constructors
+              onPressed: () => Get.to(() =>  BottomNavigationMenu()),
               child: const Text("Login"),
             ),
           ),
