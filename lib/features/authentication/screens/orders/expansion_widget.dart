@@ -7,12 +7,17 @@ class OrdersDropdownCard extends StatelessWidget {
  final Function(Orders)? orderRemove;
  final Function(Orders)? addOrder ;
  final bool flag;
-  const OrdersDropdownCard({super.key, required this.order,required this.flag,this.orderRemove,this.addOrder});
+  const OrdersDropdownCard({super.key, required this.order, required this.flag, this.orderRemove, this.addOrder});
     
 
  
   @override
   Widget build(BuildContext context) {
+    double sum=0;
+    for(int i=0;i<order.amount.length;i++)
+    {
+      sum+=order.amount[i];
+    }
     return Card(
       elevation: 2.0,
       margin: const EdgeInsets.all(8.0),
@@ -22,11 +27,29 @@ class OrdersDropdownCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Order: ${order.orders.join(", ")}'),
-                const SizedBox(height: 8.0),
-                Text('Amounts: ${order.amount.join(", ")}'),
+                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children:[
+                  for(int i=0;i<order.orders.length;i++)
+
+                  Row(
+                    children: [
+                      Text(order.orders[i]),
+                      const SizedBox(width: 10.0),
+                      Text('${order.amount[i]}'),
+                    ],
+                  ),
+                  ],
+                ),
+                 Row(
+                    children: [
+                      const Text('Total:'),
+                      const SizedBox(width: 10.0),
+                      Text('$sum'),
+                    ],
+                  ),
                 const SizedBox(height: 8.0),
                 Text('Time: ${order.time.toString()}'),
                 const SizedBox(height: 15.0),

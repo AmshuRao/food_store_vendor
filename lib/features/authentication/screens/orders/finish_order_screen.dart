@@ -14,7 +14,7 @@ class FinishOrderScreen extends GetView<OrderController> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Pending Orders",
+          "Finished Orders",
           style: TextStyle(
             color: AppColors.textWhite,
           ),

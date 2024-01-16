@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/home_screen/home.dart';
+import 'package:food_store/features/authentication/screens/orders/finish_order_screen.dart';
+import 'package:food_store/features/authentication/screens/orders/pending_order_screen.dart';
 import 'package:food_store/utils/constants/colors.dart';
 import 'package:food_store/utils/helper/helper_functions.dart';
 import 'package:get/get.dart';
@@ -28,12 +30,12 @@ class BottomNavigationMenu extends StatelessWidget {
               label: "Home",
             ),
             NavigationDestination(
-              icon: Icon(Iconsax.shop),
-              label: "Canteen",
+              icon: Icon(Iconsax.clock),
+              label: "Pending",
             ),
             NavigationDestination(
-              icon: Icon(Iconsax.bill),
-              label: "Orders",
+              icon: Icon(Iconsax.check),
+              label: "Finished",
             ),
             NavigationDestination(
               icon: Icon(Iconsax.user),
@@ -52,6 +54,9 @@ class NavigationController extends GetxController {
   
   final screens = [
    const HomeVendor(),
+   const PendingOrderScreen(),
+   const FinishOrderScreen(),
+   const Center(child:Text("Profile")),
   ];
 }
 
