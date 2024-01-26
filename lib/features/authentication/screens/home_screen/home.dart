@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/orders/finish_order_screen.dart';
 import 'package:food_store/features/authentication/screens/orders/pending_order_screen.dart';
@@ -16,17 +14,23 @@ class HomeVendor extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            const SizedBox(height: 20.0,),
+            const SizedBox(
+              height: 20.0,
+            ),
             const Center(
               child: Text(
                 "Vidyarthi Khaana",
                 style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
                   color: AppColors.white,
                 ),
               ),
             ),
-            const SizedBox(height: 20.0,),
-           const Center(
+            const SizedBox(
+              height: 20.0,
+            ),
+            const Center(
               child: Text(
                 "Let's Start working !!!",
                 style: TextStyle(
@@ -34,13 +38,16 @@ class HomeVendor extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 15.0,),
+            const SizedBox(
+              height: 15.0,
+            ),
             const Image(
               image: AssetImage(AppImages.bmsLogo),
               height: 200.0,
             ),
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 0.0),
+              margin:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 0.0),
               child: Column(
                 children: <Widget>[
                   Container(
@@ -62,7 +69,7 @@ class HomeVendor extends StatelessWidget {
                         elevation: 0.0,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children:  [
+                          children: [
                             const Text(
                               "Pending orders",
                               style: TextStyle(
@@ -82,7 +89,8 @@ class HomeVendor extends StatelessWidget {
                                   onPressed: () {
                                     Get.to(const PendingOrderScreen());
                                   },
-                                  icon: const Icon(Icons.navigate_next_outlined),
+                                  icon:
+                                      const Icon(Icons.navigate_next_outlined),
                                 ),
                               ],
                             ),
@@ -112,7 +120,7 @@ class HomeVendor extends StatelessWidget {
                   elevation: 0.0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children:  [
+                    children: [
                       const Text(
                         "Finished orders",
                         style: TextStyle(
