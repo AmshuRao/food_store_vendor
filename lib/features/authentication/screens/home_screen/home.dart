@@ -3,15 +3,17 @@
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/orders/finish_order_screen.dart';
 import 'package:food_store/features/authentication/screens/orders/pending_order_screen.dart';
+import 'package:food_store/services/orders/order_service.dart';
 import 'package:food_store/utils/constants/colors.dart';
 import 'package:food_store/utils/constants/image_strings.dart';
-import 'package:get/get.dart';
 
 class HomeVendor extends StatelessWidget {
-  const HomeVendor({Key? key}) : super(key: key);
+  HomeVendor({Key? key}) : super(key: key);
+final OrderService _orderService = OrderService();
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -72,15 +74,28 @@ class HomeVendor extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                const Text(
-                                  "67",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
+                                FutureBuilder<int>(
+                                  future: _orderService.getPendingOrdersLength(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    } else if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    } else {
+                                      return Text(
+                                        snapshot.data.toString(),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    Get.to(const PendingOrderScreen());
+                                      Navigator.push(context,MaterialPageRoute(builder:(context)=>const PendingOrderScreen(),
+                                      ));
+                                  
                                   },
                                   icon: const Icon(Icons.navigate_next_outlined),
                                 ),
@@ -122,15 +137,27 @@ class HomeVendor extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          const Text(
-                            "25",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                          FutureBuilder<int>(
+                            future: _orderService.getFinishedOrdersLength(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                return Text(
+                                  snapshot.data.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                );
+                              }
+                            },
                           ),
                           IconButton(
                             onPressed: () {
-                              Get.to(const FinishOrderScreen());
+                              Navigator.push(context,MaterialPageRoute(builder:(context)=>const FinishOrderScreen(),
+                              ));
                             },
                             icon: const Icon(Icons.navigate_next_outlined),
                           ),

@@ -53,7 +53,7 @@ class NavigationController extends GetxController {
   final RxInt index = 0.obs;
 
   final screens = [
-    const HomeVendor(),
+    HomeVendor(),
     const PendingOrderScreen(),
     const FinishOrderScreen(),
     Center(

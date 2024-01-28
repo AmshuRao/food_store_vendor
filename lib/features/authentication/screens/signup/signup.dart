@@ -31,7 +31,7 @@ class SignupScreen extends StatelessWidget {
           padding: const EdgeInsets.all(AppSizes.defaultSpace),
           child: Column(
             children: [
-              const SingupForm(),
+              SingupForm(),
               const SizedBox(height: AppSizes.spaceBtwSections),
               const FormDivider(),
               const SizedBox(height: AppSizes.spaceBtwSections),

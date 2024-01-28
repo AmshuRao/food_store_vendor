@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/orders/expansion_widget.dart';
-import 'package:food_store/features/authentication/screens/orders/order_controller.dart';
-import 'package:food_store/navigation_menu.dart';
+import 'package:food_store/services/orders/order_service.dart';
 import 'package:food_store/utils/constants/colors.dart';
-import 'package:get/get.dart';
 
-class FinishOrderScreen extends GetView<OrderController> {
+class FinishOrderScreen extends StatefulWidget{
   const FinishOrderScreen({super.key});
-
+ 
+  @override
+  State<FinishOrderScreen> createState() => _FinishOrderScreenState();
+}
+final OrderService _orderService = OrderService();
+class _FinishOrderScreenState extends State<FinishOrderScreen> {
   @override
   Widget build(BuildContext context) {
-    final orders = controller.finsihedOrders;
-
+   // final orders = controller.finsihedOrders;
+ 
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -26,17 +29,29 @@ class FinishOrderScreen extends GetView<OrderController> {
             color: Colors.white,
           ),
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
           },
         ),
       ),
-      body:  Column(
-        children:[
-          ...orders.map((order){
-            return OrdersDropdownCard(order:order,flag:false);
-          })
-        ]
-        ),
+      body: StreamBuilder(
+        stream: _orderService.getFinishedOrders(),
+        builder: ((context, snapshot)  {
+          if(snapshot.hasError)
+          {
+            return const Text("Error");
+          }
+          else if(snapshot.connectionState == ConnectionState.waiting)
+          {
+            return const Text("Loading");
+          }
+          else
+          {
+            return ListView(
+              children: snapshot.data!.map<Widget>((orderData) => OrdersDropdownCard(order:orderData,flag:false)).toList(),
+            );
+          }
+        })
+        )
     );
   }
 }

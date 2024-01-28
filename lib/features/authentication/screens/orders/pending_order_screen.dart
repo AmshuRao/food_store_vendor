@@ -1,16 +1,24 @@
+
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/orders/expansion_widget.dart';
-import 'package:food_store/features/authentication/screens/orders/order_controller.dart';
-import 'package:food_store/navigation_menu.dart';
-import 'package:get/get.dart';
+
+import 'package:food_store/services/orders/order_service.dart';
+
 import 'package:food_store/utils/constants/colors.dart';
 
-class PendingOrderScreen extends GetView<OrderController> {
+class PendingOrderScreen extends StatefulWidget {
   const PendingOrderScreen({Key? key}) : super(key: key);
+
+  @override
+  State<PendingOrderScreen> createState() => _PendingOrderScreenState();
+}
+final OrderService _orderService = OrderService();
+
+class _PendingOrderScreenState extends State<PendingOrderScreen> {
   @override
   Widget build(BuildContext context) {
     //this is the priority queue of orderes
-    final orders = controller.pendingOrders;
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -26,22 +34,29 @@ class PendingOrderScreen extends GetView<OrderController> {
             color: Colors.white,
           ),
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
           },
         ),
       ),
-      body:  Obx(()=>Column(
-        children:[
-          ...orders.map((order) {
-            return OrdersDropdownCard(order: order,orderRemove:(order){
-             controller.removeOrder(order);
-            },addOrder:(order){
-              controller.addOrder(order);
-            },flag:true);
-          }).toList(),
-        ]
+      body:  StreamBuilder(
+        stream: _orderService.getPendingOrders(),
+        builder: ((context, snapshot)  {
+          if(snapshot.hasError)
+          {
+            return const Text("Error");
+          }
+          else if(snapshot.connectionState == ConnectionState.waiting)
+          {
+            return const Text("Loading");
+          }
+          else
+          {
+            return ListView(
+              children: snapshot.data!.map<Widget>((orderData) => OrdersDropdownCard(order:orderData,flag:true)).toList(),
+            );
+          }
+        })
         )
-      ),
     );
   }
 }

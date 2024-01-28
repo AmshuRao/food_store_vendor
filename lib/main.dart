@@ -3,15 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:food_store/app.dart';
 import 'package:food_store/firebase_options.dart';
-import 'package:get_storage/get_storage.dart';
 
 Future<void> main() async {
   /// widgets binding
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();
-
-  /// GetX local storage
-  await GetStorage.init();
 
   /// await splash screen until other items load
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

@@ -1,15 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/signup/signup.dart';
-import 'package:food_store/navigation_menu.dart';
+import 'package:food_store/services/auth/auth_gate.dart';
+import 'package:food_store/services/auth/auth_service.dart';
 import 'package:food_store/utils/constants/sizes.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class LoginForm extends StatelessWidget {
-  const LoginForm({
+  LoginForm({
     super.key,
   });
-
+final TextEditingController emailController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
+void login() async {
+  try {
+    AuthService authService = AuthService();
+    await authService.signInWithEmailAndPassword(
+      emailController.text.toString(),
+      passwordController.text.toString(),
+    );
+    MaterialPageRoute(builder:(context)=>const AuthGate(),
+    );
+  } catch (e) {
+    AlertDialog(
+      title: Text(e.toString()),
+    );
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -20,6 +36,7 @@ class LoginForm extends StatelessWidget {
               prefixIcon: Icon(Iconsax.direct_right),
               labelText: "E-mail",
             ),
+            controller: emailController,
           ),
           const SizedBox(height: AppSizes.spaceBtwInputFields),
           TextFormField(
@@ -28,6 +45,7 @@ class LoginForm extends StatelessWidget {
               labelText: "Password",
               suffixIcon: Icon(Iconsax.eye_slash),
             ),
+            controller: passwordController,
             obscureText: true,
           ),
           const SizedBox(height: AppSizes.spaceBtwSections),
@@ -35,7 +53,7 @@ class LoginForm extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               // ignore: prefer_const_constructors
-              onPressed: () => Get.to(() =>  BottomNavigationMenu()),
+              onPressed: login,
               child: const Text("Login"),
             ),
           ),
@@ -43,10 +61,14 @@ class LoginForm extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(
-              onPressed: () => Get.to(() => const SignupScreen()),
-              child: const Text("Create account"),
+                onPressed: () {
+                   Navigator.push(context,MaterialPageRoute(builder:(context)=>const SignupScreen(),
+                   ),
+          );
+                },
+              child: const Text("Create Account"),
+              ),
             ),
-          ),
         ],
       ),
     );

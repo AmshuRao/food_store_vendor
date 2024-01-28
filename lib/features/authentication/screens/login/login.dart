@@ -25,7 +25,7 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             children: [
               const LoginHeader(),
-              const LoginForm(),
+              LoginForm(),
               const SizedBox(height: AppSizes.spaceBtwSections),
               const FormDivider(),
               const SizedBox(height: AppSizes.spaceBtwSections),
