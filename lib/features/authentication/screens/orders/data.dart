@@ -1,10 +1,27 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+class Order {
+  String id;
+  String canteen;
+  double totalPrice;
+  String status;
+  List<OrderItem> orderItems = [];
+  
+  Order({required this.id, required this.canteen, required this.totalPrice, required this.status, required this.orderItems});
+}
 
-class Orders {
+class OrderItem {
+  String id;
+  int count;
+  MenuItem menuItem;
+  
+  OrderItem({required this.id, required this.count, required this.menuItem});
+}
+
+class MenuItem {
+  String id;
   String name;
-  String transactionID;
-  List<String> orders=[];
-  List<double> amount=[];
-  Timestamp time;
-  Orders({required this.name,required this.transactionID,required this.orders,required this.amount,required this.time});
+  String canteen;
+  String image;
+  double price;
+  
+  MenuItem({required this.id, required this.name, required this.canteen, required this.image, required this.price});
 }

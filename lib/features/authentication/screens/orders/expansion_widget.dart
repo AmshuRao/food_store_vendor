@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/orders/data.dart';
 import 'package:food_store/services/orders/order_service.dart';
@@ -7,8 +5,8 @@ import 'package:get/get.dart';
 
 class OrdersDropdownCard extends StatelessWidget {
   final Map<String, dynamic> order;
-  final Function(Orders)? orderRemove;
-  final Function(Orders)? addOrder;
+  final Function(Order)? orderRemove;
+  final Function(Order)? addOrder;
   final bool flag;
 
   OrdersDropdownCard({
@@ -18,18 +16,19 @@ class OrdersDropdownCard extends StatelessWidget {
     this.orderRemove,
     this.addOrder,
   });
-final OrderService _orderService = OrderService();
+  final OrderService _orderService = OrderService();
+
   @override
   Widget build(BuildContext context) {
     double sum = 0;
-    for (var i = 0; i < order['amount'].length; i++) {
-      sum += order['amount'][i];
+    for (var i = 0; i < order['orderItems'].length; i++) {
+      sum += order['orderItems'][i]["item"]['price'] * order['orderItems'][i]['count'];
     }
     return Card(
       elevation: 2.0,
       margin: const EdgeInsets.all(8.0),
       child: ExpansionTile(
-        title: Text("${order['name']}-${order['transactionID']}"),
+        title: Text("${order['orderItems'][0]["item"]['name']}-${order['orderItems'][0]['id']}"),
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -39,24 +38,48 @@ final OrderService _orderService = OrderService();
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    for (var i = 0; i < order['orders'].length; i++)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    for (var i = 0; i < order['orderItems'].length; i++)
+                      Column(
                         children: [
-                          Expanded(
-                            child: Text(
-                              order['orders'][i],
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      '${order['orderItems'][i]["item"]['name']}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20.0),
+                                    Text(
+                                      '${order['orderItems'][i]['count']} X',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10.0),
+                                    Text(
+                                      '${order['orderItems'][i]["item"]['price']}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 30.0),
+                                    Text(
+                                      '${order['orderItems'][i]["item"]['price'] * order['orderItems'][i]['count']}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                          Text(
-                            order['amount'][i].toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          
                         ],
                       ),
                   ],
@@ -94,14 +117,11 @@ final OrderService _orderService = OrderService();
                             textCancel: "Cancel",
                             onConfirm: () {
                               _orderService.markAsFinished(order);
-                            Get.back();
+                              Get.back();
                             },
-                            onCancel: () {
-                              
-                            },
+                            onCancel: () {},
                             barrierDismissible: true,
-                             // Add this line
-                         
+                            // Add this line
                           );
                         },
                         child: const Text("Finish Order"),
@@ -114,10 +134,10 @@ final OrderService _orderService = OrderService();
                             textConfirm: "Confirm",
                             textCancel: "Cancel",
                             onConfirm: () {
-                             _orderService.deleteOrder(order);
+                              _orderService.deleteOrder(order);
                               Get.back();
                             },
-                           barrierDismissible: true
+                            barrierDismissible: true,
                           );
                         },
                         child: const Text("Cancel Order"),
