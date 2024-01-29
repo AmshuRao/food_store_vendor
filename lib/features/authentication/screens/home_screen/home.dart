@@ -74,8 +74,8 @@ final OrderService _orderService = OrderService();
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                FutureBuilder<int>(
-                                  future: _orderService.getPendingOrdersLength(),
+                                StreamBuilder<int>(
+                                  stream: _orderService.getPendingOrdersLength(),
                                   builder: (context, snapshot) {
                                     if (snapshot.connectionState == ConnectionState.waiting) {
                                       return const CircularProgressIndicator();
@@ -137,8 +137,8 @@ final OrderService _orderService = OrderService();
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          FutureBuilder<int>(
-                            future: _orderService.getFinishedOrdersLength(),
+                          StreamBuilder<int>(
+                            stream: _orderService.getFinishedOrdersLength(),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return const CircularProgressIndicator();

@@ -48,19 +48,18 @@ class OrderService {
   }
 
   //get the length of finisded orders
-  Future<int> getFinishedOrdersLength() async {
+  Stream<int> getFinishedOrdersLength() {
     //get the length of finished orders
-    final QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore.collection("finished_orders").get();
-    return snapshot.docs.length;
+    return _firestore.collection("finished_orders").snapshots().map((snapshot) => snapshot.docs.length);
   }
 
   //get the length of pending orders
-  Future<int> getPendingOrdersLength() async {
+  Stream<int> getPendingOrdersLength() {
     //get the length of pending orders
-    final QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
-      .collection("PendingOrders")
-      .where("merchantId", isEqualTo: _auth.getCurrentUser()!.uid)
-      .get();
-    return snapshot.docs.length;
+    return _firestore
+        .collection("PendingOrders")
+        .where("merchantId", isEqualTo: _auth.getCurrentUser()!.uid)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
   }
 }
