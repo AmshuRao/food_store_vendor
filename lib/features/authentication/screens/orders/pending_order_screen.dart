@@ -10,7 +10,6 @@ class PendingOrderScreen extends GetView<OrderController> {
   Widget build(BuildContext context) {
     final orders = controller.pendingOrders;
 
-    
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -53,7 +52,6 @@ class PendingOrderScreen extends GetView<OrderController> {
                           },
                           onCancel: () {
                             // controller.addOrder(order);
-                            
                           },
                         );
                       }

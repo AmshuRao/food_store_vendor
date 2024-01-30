@@ -20,6 +20,7 @@ dependencies:
   flutter_native_splash: ^2.3.1
   smooth_page_indicator: ^1.1.0
   carousel_slider: ^4.2.1
+  fl_chart: ^0.60.0
 
   # Icons
   iconsax: ^0.0.8
@@ -34,6 +35,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   capped_progress_indicator: ^0.0.2
 
+
   #firebase
   firebase_core: ^2.24.2
   firebase_auth: ^4.16.0
@@ -43,6 +45,10 @@ dependencies:
   image_picker: ^1.0.7
   firebase_storage: ^11.6.0
   accordion: ^2.6.0
+  firebase_database: ^10.4.0
+  # firebase_database: 
+
+  font_awesome_flutter: ^10.7.0
 
   #--------------- ./ PACKAGES END ------------------#
 

@@ -10,6 +10,7 @@ Future<void> main() async {
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();
 
+  // await Firebase.initial
   /// GetX local storage
   await GetStorage.init();
 

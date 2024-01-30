@@ -1,154 +1,89 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
-import 'package:food_store/features/authentication/screens/orders/finish_order_screen.dart';
-import 'package:food_store/features/authentication/screens/orders/pending_order_screen.dart';
-import 'package:food_store/utils/constants/colors.dart';
-import 'package:food_store/utils/constants/image_strings.dart';
-import 'package:get/get.dart';
+import 'package:food_store/features/authentication/screens/home_screen/readData.dart';
+import 'package:intl/intl.dart'; // Import the intl package
+import 'package:food_store/graph/bar_graph.dart';
+import 'package:firebase_database/firebase_database.dart';
 
-class HomeVendor extends StatelessWidget {
-  const HomeVendor({Key? key}) : super(key: key);
+// final databaseReference = FirebaseDatabase.instance
+//     .ref("https://food-store-12f0f-default-rtdb.firebaseio.com/Food");
+
+class HomeVendor extends StatefulWidget {
+  @override
+  State<HomeVendor> createState() => _HomeVendorState();
+}
+
+class _HomeVendorState extends State<HomeVendor> {
+  List<String> checkIds = [];
+  List<int> dailySummary = [];
+
+  Future getId() async {
+    await FirebaseFirestore.instance.collection('MenuItems').get().then(
+          (snapshot) => snapshot.docs.forEach((element) {
+            // print(element.reference);
+            checkIds.add(element.reference.id);
+            dailySummary.add(element.data()['count'] ?? 0);
+          }),
+        );
+  }
+
+  @override
+  void initState() {
+    // getId();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Get the current date
+    String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+
     return Scaffold(
-      body: SafeArea(
+      body: Center(
         child: Column(
-          children: <Widget>[
-            const SizedBox(
-              height: 20.0,
-            ),
-            const Center(
-              child: Text(
-                "Vidyarthi Khaana",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: AppColors.white,
-                ),
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'Today Sales - $formattedDate', // Include the formatted date
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(
-              height: 20.0,
-            ),
-            const Center(
-              child: Text(
-                "Let's Start working !!!",
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 15.0,
-            ),
-            const Image(
-              image: AssetImage(AppImages.bmsLogo),
-              height: 200.0,
-            ),
-            Container(
-              margin:
-                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 0.0),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.dark,
-                      border: Border.all(
-                        width: 2.0,
-                        color: Colors.white,
-                        style: BorderStyle.solid,
-                      ),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    margin: const EdgeInsets.fromLTRB(15.0, 50.0, 15.0, 10.0),
-                    width: double.infinity,
-                    height: 60.0,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10.0, 2.0, 2.0, 2.0),
-                      child: Card(
-                        elevation: 0.0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              "Pending orders",
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                const Text(
-                                  "67",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    Get.to(const PendingOrderScreen());
-                                  },
-                                  icon:
-                                      const Icon(Icons.navigate_next_outlined),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(
-                  width: 2.0,
-                  color: Colors.white,
-                  style: BorderStyle.solid,
-                ),
-                borderRadius: BorderRadius.circular(15.0),
-              ),
-              margin: const EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 15.0),
-              width: double.infinity,
-              height: 60.0,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10.0, 2.0, 2.0, 2.0),
-                child: Card(
-                  elevation: 0.0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Finished orders",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Text(
-                            "25",
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Get.to(const FinishOrderScreen());
-                            },
-                            icon: const Icon(Icons.navigate_next_outlined),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            const SizedBox(height: 10),
+            // Expanded(
+            //     child: FutureBuilder(
+            //   future: getId(),
+            //   builder: (context, snapshot) {
+            //     return ListView.builder(
+            //       itemCount: checkIds.length,
+            //       itemBuilder: (context, index) {
+            //         return ListTile(
+            //           title: getMenu(
+            //             MenuId: checkIds[index],
+            //           ),
+            //         );
+            //       },
+            //     );
+            //   },
+            // )),
+            // const SizedBox(height: 10),
+            SizedBox(
+                height: 200,
+                child: FutureBuilder(
+                    future: getId(),
+                    builder: (context, index) {
+                      if (dailySummary.isEmpty) {
+                        // Return a loading indicator or placeholder widget
+                        return const CircularProgressIndicator();
+                      } else {
+                        return BarGraph(
+                          dailySummary: dailySummary,
+                        );
+                      }
+                    })),
           ],
         ),
       ),

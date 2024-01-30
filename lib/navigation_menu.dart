@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/home_screen/home.dart';
 import 'package:food_store/features/authentication/screens/orders/finish_order_screen.dart';
 import 'package:food_store/features/authentication/screens/orders/pending_order_screen.dart';
+import 'package:food_store/features/authentication/screens/profile/profilepage.dart';
 import 'package:food_store/utils/constants/colors.dart';
 import 'package:food_store/utils/helper/helper_functions.dart';
 import 'package:get/get.dart';
@@ -53,27 +54,9 @@ class NavigationController extends GetxController {
   final RxInt index = 0.obs;
 
   final screens = [
-    const HomeVendor(),
+    HomeVendor(),
     const PendingOrderScreen(),
     const FinishOrderScreen(),
-    Center(
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 16)),
-        onPressed: () async {
-          final FirebaseFirestore db = FirebaseFirestore.instance;
-          try {
-          await db
-              .collection("Test")
-              .doc()
-              .set({"test": "test data"});                
-              Get.snackbar("Response", "Data written");
-          } catch (e) {
-            Get.snackbar("Failed", e.toString());
-          }
-        },
-        child: const Text("Test button"),
-      ),
-    ),
+    const profilePageScreen(),
   ];
 }
