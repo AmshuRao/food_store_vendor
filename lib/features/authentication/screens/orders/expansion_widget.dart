@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/orders/data.dart';
 import 'package:food_store/services/orders/order_service.dart';
@@ -23,9 +25,9 @@ class OrdersDropdownCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double sum = 0;
 
-    if (order['orderItems'] != null) {
-      for (var i = 0; i < order['orderItems']!.length; i++) {
-        sum += order['orderItems']![i]["item"]['price'] * order['orderItems']![i]['count'];
+    if (order['orders'] != null) {
+      for (var i = 0; i < order['orders']!.length; i++) {
+        sum += order['orders']![i]["item"]['price'] * order['orders']![i]['count'];
       }
     }
 
@@ -33,7 +35,7 @@ class OrdersDropdownCard extends StatelessWidget {
       elevation: 2.0,
       margin: const EdgeInsets.all(8.0),
       child: ExpansionTile(
-        title: Text("${order['orderItems']?[0]["item"]['name']}-${order['orderItems']?[0]['id']}"),
+        title: Text("${order['orders']?[0]["item"]['name']}-${order['orders']?[0]['id']}"),
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -43,8 +45,8 @@ class OrdersDropdownCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    if (order['orderItems'] != null)
-                      for (var i = 0; i < order['orderItems']!.length; i++)
+                    if (order['orders'] != null)
+                      for (var i = 0; i < order['orders'].length; i++)
                         Column(
                           children: [
                             Row(
@@ -54,28 +56,28 @@ class OrdersDropdownCard extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Text(
-                                        '${order['orderItems']![i]["item"]['name']}',
+                                        '${order['orders']?[i]["item"]['name']}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       const SizedBox(width: 20.0),
                                       Text(
-                                        '${order['orderItems']![i]['count']} X',
+                                        '${order['orders']?[i]['count']} X',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       const SizedBox(width: 10.0),
                                       Text(
-                                        '${order['orderItems']![i]["item"]['price']}',
+                                        '${order['orders']?[i]["item"]['price']}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                       const SizedBox(width: 30.0),
                                       Text(
-                                        '${order['orderItems']![i]["item"]['price'] * order['orderItems']![i]['count']}',
+                                        '${order['orders']?[i]["item"]['price'] * order['orders']![i]['count']}',
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
