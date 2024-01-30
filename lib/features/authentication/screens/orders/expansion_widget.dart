@@ -10,25 +10,30 @@ class OrdersDropdownCard extends StatelessWidget {
   final bool flag;
 
   OrdersDropdownCard({
-    super.key,
+    Key? key,
     required this.order,
     required this.flag,
     this.orderRemove,
     this.addOrder,
-  });
+  }) : super(key: key);
+
   final OrderService _orderService = OrderService();
 
   @override
   Widget build(BuildContext context) {
     double sum = 0;
-    for (var i = 0; i < order['orderItems'].length; i++) {
-      sum += order['orderItems'][i]["item"]['price'] * order['orderItems'][i]['count'];
+
+    if (order['orderItems'] != null) {
+      for (var i = 0; i < order['orderItems']!.length; i++) {
+        sum += order['orderItems']![i]["item"]['price'] * order['orderItems']![i]['count'];
+      }
     }
+
     return Card(
       elevation: 2.0,
       margin: const EdgeInsets.all(8.0),
       child: ExpansionTile(
-        title: Text("${order['orderItems'][0]["item"]['name']}-${order['orderItems'][0]['id']}"),
+        title: Text("${order['orderItems']?[0]["item"]['name']}-${order['orderItems']?[0]['id']}"),
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -38,50 +43,50 @@ class OrdersDropdownCard extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    for (var i = 0; i < order['orderItems'].length; i++)
-                      Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      '${order['orderItems'][i]["item"]['name']}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+                    if (order['orderItems'] != null)
+                      for (var i = 0; i < order['orderItems']!.length; i++)
+                        Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        '${order['orderItems']![i]["item"]['name']}',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 20.0),
-                                    Text(
-                                      '${order['orderItems'][i]['count']} X',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                      const SizedBox(width: 20.0),
+                                      Text(
+                                        '${order['orderItems']![i]['count']} X',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 10.0),
-                                    Text(
-                                      '${order['orderItems'][i]["item"]['price']}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                      const SizedBox(width: 10.0),
+                                      Text(
+                                        '${order['orderItems']![i]["item"]['price']}',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 30.0),
-                                    Text(
-                                      '${order['orderItems'][i]["item"]['price'] * order['orderItems'][i]['count']}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                      const SizedBox(width: 30.0),
+                                      Text(
+                                        '${order['orderItems']![i]["item"]['price'] * order['orderItems']![i]['count']}',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          
-                        ],
-                      ),
+                              ],
+                            ),
+                          ],
+                        ),
                   ],
                 ),
                 const SizedBox(height: 15.0),

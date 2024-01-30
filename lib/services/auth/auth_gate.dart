@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:food_store/features/authentication/screens/home_screen/home.dart';
+// import 'package:food_store/features/authentication/screens/home_screen/home.dart';
 import 'package:food_store/features/authentication/screens/login/login.dart';
+import 'package:food_store/navigation_menu.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -15,7 +16,7 @@ class AuthGate extends StatelessWidget {
           //if user is loggd in
           if(snapshot.hasData)
           {
-            return HomeVendor();
+            return const BottomNavigationMenu();
           }
           else
           {

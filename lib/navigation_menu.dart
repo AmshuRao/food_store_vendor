@@ -1,79 +1,66 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: use_build_context_synchronously
+
+
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/home_screen/home.dart';
 import 'package:food_store/features/authentication/screens/orders/finish_order_screen.dart';
 import 'package:food_store/features/authentication/screens/orders/pending_order_screen.dart';
+import 'package:food_store/features/authentication/screens/profile/profilepage.dart';
 import 'package:food_store/utils/constants/colors.dart';
 import 'package:food_store/utils/helper/helper_functions.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class BottomNavigationMenu extends StatelessWidget {
+class BottomNavigationMenu extends StatefulWidget {
   const BottomNavigationMenu({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final NavigationController controller = Get.put(NavigationController());
-    final bool isDarkMode = AppHelperFunctions.isDarkMode(context);
-    return Scaffold(
-      bottomNavigationBar: Obx(
-        () => NavigationBar(
-          backgroundColor: isDarkMode ? AppColors.dark : AppColors.white,
-          indicatorColor: isDarkMode
-              ? AppColors.white.withOpacity(0.1)
-              : Colors.black.withOpacity(0.1),
-          selectedIndex: controller.index.value,
-          onDestinationSelected: (index) => controller.index.value = index,
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Iconsax.home),
-              label: "Home",
-            ),
-            NavigationDestination(
-              icon: Icon(Iconsax.clock),
-              label: "Pending",
-            ),
-            NavigationDestination(
-              icon: Icon(Iconsax.check),
-              label: "Finished",
-            ),
-            NavigationDestination(
-              icon: Icon(Iconsax.user),
-              label: "Profile",
-            ),
-          ],
-        ),
-      ),
-      body: Obx(() => controller.screens[controller.index.value]),
-    );
-  }
+  // ignore: library_private_types_in_public_api
+  _BottomNavigationMenuState createState() => _BottomNavigationMenuState();
 }
 
-class NavigationController extends GetxController {
-  final RxInt index = 0.obs;
+class _BottomNavigationMenuState extends State<BottomNavigationMenu> {
+  int selectedIndex = 0;
 
-  final screens = [
-    HomeVendor(),
-    const PendingOrderScreen(),
-    const FinishOrderScreen(),
-    Center(
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 16)),
-        onPressed: () async {
-          final FirebaseFirestore db = FirebaseFirestore.instance;
-          try {
-          await db
-              .collection("Test")
-              .doc()
-              .set({"test": "test data"});                
-              Get.snackbar("Response", "Data written");
-          } catch (e) {
-            Get.snackbar("Failed", e.toString());
-          }
-        },
-        child: const Text("Test button"),
+  @override
+  Widget build(BuildContext context) {
+    final bool isDarkMode = AppHelperFunctions.isDarkMode(context);
+    return Scaffold(
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: isDarkMode ? AppColors.dark : AppColors.white,
+        indicatorColor: isDarkMode
+            ? AppColors.white.withOpacity(0.1)
+            : Colors.black.withOpacity(0.1),
+        selectedIndex: selectedIndex,
+        onDestinationSelected: (index) => setState(() => selectedIndex = index),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Iconsax.home),
+            label: "Home",
+          ),
+          NavigationDestination(
+            icon: Icon(Iconsax.clock),
+            label: "Pending",
+          ),
+          NavigationDestination(
+            icon: Icon(Iconsax.check),
+            label: "Finished",
+          ),
+          NavigationDestination(
+            icon: Icon(Iconsax.user),
+            label: "Profile",
+          ),
+        ],
       ),
-    ),
-  ];
+      body: IndexedStack(
+        index: selectedIndex,
+        children: const [
+          HomeVendor(),
+          PendingOrderScreen(),
+          FinishOrderScreen(),
+          //i just neeed to add the profile screen in here
+          profilePageScreen(),
+        ],
+      ),
+    );
+  }
 }
