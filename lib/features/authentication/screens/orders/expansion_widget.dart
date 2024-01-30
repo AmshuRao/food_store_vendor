@@ -1,4 +1,4 @@
-import 'dart:html';
+// import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/orders/data.dart';
@@ -27,7 +27,8 @@ class OrdersDropdownCard extends StatelessWidget {
 
     if (order['orders'] != null) {
       for (var i = 0; i < order['orders']!.length; i++) {
-        sum += order['orders']![i]["item"]['price'] * order['orders']![i]['count'];
+        sum +=
+            order['orders']![i]["item"]['price'] * order['orders']![i]['count'];
       }
     }
 
@@ -35,69 +36,41 @@ class OrdersDropdownCard extends StatelessWidget {
       elevation: 2.0,
       margin: const EdgeInsets.all(8.0),
       child: ExpansionTile(
-        title: Text("${order['orders']?[0]["item"]['name']}-${order['orders']?[0]['id']}"),
+        title: Text(
+            "${order['orders']?[0]["item"]['name']}-${order['orders']?[0]['id']}"),
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (order['orders'] != null)
-                      for (var i = 0; i < order['orders'].length; i++)
-                        Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        '${order['orders']?[i]["item"]['name']}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 20.0),
-                                      Text(
-                                        '${order['orders']?[i]['count']} X',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10.0),
-                                      Text(
-                                        '${order['orders']?[i]["item"]['price']}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 30.0),
-                                      Text(
-                                        '${order['orders']?[i]["item"]['price'] * order['orders']![i]['count']}',
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                DataTable(
+                  columns: const [
+                    DataColumn(label: Text('Item')),
+                    DataColumn(label: Text('Quantity')),
+                    DataColumn(label: Text('Price')),
+                    DataColumn(label: Text('Total')),
+                  ],
+                  rows: [
+                    for (var i = 0; i < order['orders'].length; i++)
+                      DataRow(cells: [
+                        DataCell(
+                            Text('${order['orders']?[i]["item"]['name']}')),
+                        DataCell(Text('${order['orders']?[i]['count']} X')),
+                        DataCell(
+                            Text('${order['orders']?[i]["item"]['price']}')),
+                        DataCell(Text(
+                            '${order['orders']?[i]["item"]['price'] * order['orders']![i]['count']}')),
+                      ]),
                   ],
                 ),
                 const SizedBox(height: 15.0),
                 const Divider(), // Add horizontal line
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text(
-                      'Total: ',
+                      'Total:   Rs. ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -119,7 +92,8 @@ class OrdersDropdownCard extends StatelessWidget {
                         onPressed: () {
                           Get.defaultDialog(
                             title: "Confirm Order",
-                            content: const Text("Are you sure you want to confirm this order?"),
+                            content: const Text(
+                                "Are you sure you want to confirm this order?"),
                             textConfirm: "Confirm",
                             textCancel: "Cancel",
                             onConfirm: () {
@@ -128,7 +102,6 @@ class OrdersDropdownCard extends StatelessWidget {
                             },
                             onCancel: () {},
                             barrierDismissible: true,
-                            // Add this line
                           );
                         },
                         child: const Text("Finish Order"),
@@ -137,7 +110,8 @@ class OrdersDropdownCard extends StatelessWidget {
                         onPressed: () {
                           Get.defaultDialog(
                             title: "Cancel Order",
-                            content: const Text("Are you sure you want to cancel this order?"),
+                            content: const Text(
+                                "Are you sure you want to cancel this order?"),
                             textConfirm: "Confirm",
                             textCancel: "Cancel",
                             onConfirm: () {

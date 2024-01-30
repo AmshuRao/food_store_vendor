@@ -1,15 +1,11 @@
-// ignore_for_file: depend_on_referenced_packages, avoid_function_literals_in_foreach_calls
-
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Import the intl package
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:food_store/graph/bar_graph.dart';
 
-// final databaseReference = FirebaseDatabase.instance
-//     .ref("https://food-store-12f0f-default-rtdb.firebaseio.com/Food");
-
 class HomeVendor extends StatefulWidget {
-  const HomeVendor({super.key});
+  const HomeVendor({Key? key}) : super(key: key);
 
   @override
   State<HomeVendor> createState() => _HomeVendorState();
@@ -18,26 +14,39 @@ class HomeVendor extends StatefulWidget {
 class _HomeVendorState extends State<HomeVendor> {
   List<String> checkIds = [];
   List<double> dailySummary = [];
+  bool isDataLoaded = false;
 
-  Future getId() async {
+  Future<void> getId() async {
     await FirebaseFirestore.instance.collection('MenuItems').get().then(
           (snapshot) => snapshot.docs.forEach((element) {
-            // print(element.reference);
             checkIds.add(element.reference.id);
-            dailySummary.add(element.data()['count'] ?? 0);
+            dailySummary.add((element.data()['count'] ?? 0));
           }),
         );
+    setState(() {
+      isDataLoaded = true; // Set the flag to true after data is loaded
+    });
   }
 
   @override
   void initState() {
-    // getId();
     super.initState();
+    startTimer(); // Start the timer
+  }
+
+  void startTimer() {
+    // Set up a periodic timer to refresh data every 30 seconds
+    Timer.periodic(Duration(seconds: 30), (Timer timer) {
+      fetchData();
+    });
+  }
+
+  Future<void> fetchData() async {
+    await getId();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Get the current date
     String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
     return Scaffold(
@@ -47,44 +56,22 @@ class _HomeVendorState extends State<HomeVendor> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Today Sales - $formattedDate', // Include the formatted date
+              'Today Sales - $formattedDate',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 10),
-            // Expanded(
-            //     child: FutureBuilder(
-            //   future: getId(),
-            //   builder: (context, snapshot) {
-            //     return ListView.builder(
-            //       itemCount: checkIds.length,
-            //       itemBuilder: (context, index) {
-            //         return ListTile(
-            //           title: getMenu(
-            //             MenuId: checkIds[index],
-            //           ),
-            //         );
-            //       },
-            //     );
-            //   },
-            // )),
-            // const SizedBox(height: 10),
-            SizedBox(
+            if (isDataLoaded)
+              SizedBox(
                 height: 200,
-                child: FutureBuilder(
-                    future: getId(),
-                    builder: (context, index) {
-                      if (dailySummary.isEmpty) {
-                        // Return a loading indicator or placeholder widget
-                        return const CircularProgressIndicator();
-                      } else {
-                        return BarGraph(
-                          dailySummary: dailySummary,
-                        );
-                      }
-                    })),
+                child: BarGraph(
+                  dailySummary: dailySummary,
+                ),
+              )
+            else
+              CircularProgressIndicator(),
           ],
         ),
       ),
