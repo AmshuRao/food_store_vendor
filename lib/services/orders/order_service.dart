@@ -37,8 +37,17 @@ class OrderService {
   //mark as finished
   Future<void> markAsFinished(Map<String, dynamic> order) async {
     //mark the order as finished
-    await _firestore.collection("finished_orders").add(order);
-    await _firestore.collection("PendingOrders").doc(order['uid']).delete();
+   await _firestore.collection("PendingOrders").doc(order['uid']).delete();
+
+    // Change order status to 3 (finished)
+    order['status'] = 3;
+
+    // Add the order to "finished_orders" collection
+    final DocumentReference orderRef = await _firestore.collection("finished_orders").add(order);
+    final String orderId = orderRef.id; // Get the actual document UID
+
+    order['uid'] = orderId; // Add the UID to the order
+    await _firestore.collection("finished_orders").doc(orderId).update(order);
   }
 
   //delete the order
@@ -61,5 +70,11 @@ class OrderService {
         .where("merchantId", isEqualTo: _auth.getCurrentUser()!.uid)
         .snapshots()
         .map((snapshot) => snapshot.docs.length);
+  }
+  //change the status of the order
+  Future<void>changeStatus(Map<String, dynamic> order,int status)async
+  {
+      order['status'] = status; // Change order status to 2
+      await _firestore.collection("finished_orders").doc(order['uid']).update(order);
   }
 }

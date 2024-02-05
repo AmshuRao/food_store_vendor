@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_store/features/authentication/screens/orders/data.dart';
 import 'package:food_store/services/orders/order_service.dart';
+import 'package:food_store/utils/constants/colors.dart';
 import 'package:get/get.dart';
 
 class OrdersDropdownCard extends StatelessWidget {
@@ -32,105 +33,118 @@ class OrdersDropdownCard extends StatelessWidget {
       }
     }
 
-    var x = order['userId'];
-    if (x == null) {
-      x = order['uid'];
-    }
-    return SingleChildScrollView(
-      child: Card(
-        elevation: 2.0,
-        margin: const EdgeInsets.all(8.0),
+    return Card(
+      elevation: 2.0,
+      margin: const EdgeInsets.all(8.0),
+      child: Container(
+        color: flag == false
+            ? (order['status'] == 4
+                ? const Color.fromARGB(255, 0, 181, 6)
+                : Color.fromARGB(255, 13, 56, 209))
+            : AppColors.black,
         child: ExpansionTile(
-          title: Text("${order['orders']?[0]["item"]['name']}-${x}"),
+          title:
+              Text("${order['orders']?[0]["item"]['name']}-${order['userId']}"),
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  DataTable(
-                    columns: const [
-                      DataColumn(label: Text('Item')),
-                      DataColumn(label: Text('Quantity')),
-                      DataColumn(label: Text('Price')),
-                      DataColumn(label: Text('Total')),
-                    ],
-                    rows: [
-                      for (var i = 0; i < order['orders'].length; i++)
-                        DataRow(cells: [
-                          DataCell(
-                              Text('${order['orders']?[i]["item"]['name']}')),
-                          DataCell(Text('${order['orders']?[i]['count']} X')),
-                          DataCell(
-                              Text('${order['orders']?[i]["item"]['price']}')),
-                          DataCell(Text(
-                              '${order['orders']?[i]["item"]['price'] * order['orders']![i]['count']}')),
-                        ]),
-                    ],
-                  ),
-                  const SizedBox(height: 15.0),
-                  const Divider(), // Add horizontal line
-                  Row(
-                    children: [
-                      const Text(
-                        'Total:   Rs. ',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        '$sum',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15.0),
-                  if (flag)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        TextButton(
-                          onPressed: () {
-                            Get.defaultDialog(
-                              title: "Confirm Order",
-                              content: const Text(
-                                  "Are you sure you want to confirm this order?"),
-                              textConfirm: "Confirm",
-                              textCancel: "Cancel",
-                              onConfirm: () {
-                                _orderService.markAsFinished(order);
-                                Get.back();
-                              },
-                              onCancel: () {},
-                              barrierDismissible: true,
-                            );
-                          },
-                          child: const Text("Finish Order"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Get.defaultDialog(
-                              title: "Cancel Order",
-                              content: const Text(
-                                  "Are you sure you want to cancel this order?"),
-                              textConfirm: "Confirm",
-                              textCancel: "Cancel",
-                              onConfirm: () {
-                                _orderService.deleteOrder(order);
-                                Get.back();
-                              },
-                              barrierDismissible: true,
-                            );
-                          },
-                          child: const Text("Cancel Order"),
-                        ),
-                      ],
-                    ),
+              child: DataTable(
+                columns: const [
+                  DataColumn(label: Text('Item')),
+                  DataColumn(label: Text('Quantity')),
+                  DataColumn(label: Text('Price')),
+                  DataColumn(label: Text('Total')),
+                ],
+                rows: [
+                  for (var i = 0; i < order['orders'].length; i++)
+                    DataRow(cells: [
+                      DataCell(Text('${order['orders']?[i]["item"]['name']}')),
+                      DataCell(Text('${order['orders']?[i]['count']} X')),
+                      DataCell(Text('${order['orders']?[i]["item"]['price']}')),
+                      DataCell(Text(
+                          '${order['orders']?[i]["item"]['price'] * order['orders']![i]['count']}')),
+                    ]),
                 ],
               ),
             ),
+            const SizedBox(height: 15.0),
+            const Divider(), // Add horizontal line
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Total: ',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 10.0),
+                Text(
+                  '$sum',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 15.0),
+            if (flag)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Get.defaultDialog(
+                        title: "Confirm Order",
+                        content: const Text(
+                            "Are you sure you want to confirm this order?"),
+                        textConfirm: "Confirm",
+                        textCancel: "Cancel",
+                        onConfirm: () {
+                          _orderService.markAsFinished(order);
+                          Get.back();
+                        },
+                        onCancel: () {},
+                        barrierDismissible: true,
+                      );
+                    },
+                    child: const Text("Finish Order"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Get.defaultDialog(
+                        title: "Cancel Order",
+                        content: const Text(
+                            "Are you sure you want to cancel this order?"),
+                        textConfirm: "Confirm",
+                        textCancel: "Cancel",
+                        onConfirm: () {
+                          _orderService.deleteOrder(order);
+                          Get.back();
+                        },
+                        barrierDismissible: true,
+                      );
+                    },
+                    child: const Text("Cancel Order"),
+                  ),
+                ],
+              )
+            else if (order['status'] == 3)
+              Row(
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        _orderService.changeStatus(order, 4);
+                      },
+                      child: const Text(
+                        "Order Served",
+                        style: TextStyle(
+                          // color: Colors.black, // Set your desired color
+                          fontWeight: FontWeight.bold, // Make the text bold
+                        ),
+                      )),
+                ],
+              )
           ],
         ),
       ),
