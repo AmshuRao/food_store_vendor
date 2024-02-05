@@ -32,103 +32,107 @@ class OrdersDropdownCard extends StatelessWidget {
       }
     }
 
-    return Card(
-      elevation: 2.0,
-      margin: const EdgeInsets.all(8.0),
-      child: ExpansionTile(
-        title: Text(
-            "${order['orders']?[0]["item"]['name']}-${order['orders']?[0]['id']}"),
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                DataTable(
-                  columns: const [
-                    DataColumn(label: Text('Item')),
-                    DataColumn(label: Text('Quantity')),
-                    DataColumn(label: Text('Price')),
-                    DataColumn(label: Text('Total')),
-                  ],
-                  rows: [
-                    for (var i = 0; i < order['orders'].length; i++)
-                      DataRow(cells: [
-                        DataCell(
-                            Text('${order['orders']?[i]["item"]['name']}')),
-                        DataCell(Text('${order['orders']?[i]['count']} X')),
-                        DataCell(
-                            Text('${order['orders']?[i]["item"]['price']}')),
-                        DataCell(Text(
-                            '${order['orders']?[i]["item"]['price'] * order['orders']![i]['count']}')),
-                      ]),
-                  ],
-                ),
-                const SizedBox(height: 15.0),
-                const Divider(), // Add horizontal line
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Total:   Rs. ',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '$sum',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 15.0),
-                if (flag)
+    var x = order['userId'];
+    if (x == null) {
+      x = order['uid'];
+    }
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 2.0,
+        margin: const EdgeInsets.all(8.0),
+        child: ExpansionTile(
+          title: Text("${order['orders']?[0]["item"]['name']}-${x}"),
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  DataTable(
+                    columns: const [
+                      DataColumn(label: Text('Item')),
+                      DataColumn(label: Text('Quantity')),
+                      DataColumn(label: Text('Price')),
+                      DataColumn(label: Text('Total')),
+                    ],
+                    rows: [
+                      for (var i = 0; i < order['orders'].length; i++)
+                        DataRow(cells: [
+                          DataCell(
+                              Text('${order['orders']?[i]["item"]['name']}')),
+                          DataCell(Text('${order['orders']?[i]['count']} X')),
+                          DataCell(
+                              Text('${order['orders']?[i]["item"]['price']}')),
+                          DataCell(Text(
+                              '${order['orders']?[i]["item"]['price'] * order['orders']![i]['count']}')),
+                        ]),
+                    ],
+                  ),
+                  const SizedBox(height: 15.0),
+                  const Divider(), // Add horizontal line
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      TextButton(
-                        onPressed: () {
-                          Get.defaultDialog(
-                            title: "Confirm Order",
-                            content: const Text(
-                                "Are you sure you want to confirm this order?"),
-                            textConfirm: "Confirm",
-                            textCancel: "Cancel",
-                            onConfirm: () {
-                              _orderService.markAsFinished(order);
-                              Get.back();
-                            },
-                            onCancel: () {},
-                            barrierDismissible: true,
-                          );
-                        },
-                        child: const Text("Finish Order"),
+                      const Text(
+                        'Total:   Rs. ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Get.defaultDialog(
-                            title: "Cancel Order",
-                            content: const Text(
-                                "Are you sure you want to cancel this order?"),
-                            textConfirm: "Confirm",
-                            textCancel: "Cancel",
-                            onConfirm: () {
-                              _orderService.deleteOrder(order);
-                              Get.back();
-                            },
-                            barrierDismissible: true,
-                          );
-                        },
-                        child: const Text("Cancel Order"),
+                      Text(
+                        '$sum',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),
-              ],
+                  const SizedBox(height: 15.0),
+                  if (flag)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            Get.defaultDialog(
+                              title: "Confirm Order",
+                              content: const Text(
+                                  "Are you sure you want to confirm this order?"),
+                              textConfirm: "Confirm",
+                              textCancel: "Cancel",
+                              onConfirm: () {
+                                _orderService.markAsFinished(order);
+                                Get.back();
+                              },
+                              onCancel: () {},
+                              barrierDismissible: true,
+                            );
+                          },
+                          child: const Text("Finish Order"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Get.defaultDialog(
+                              title: "Cancel Order",
+                              content: const Text(
+                                  "Are you sure you want to cancel this order?"),
+                              textConfirm: "Confirm",
+                              textCancel: "Cancel",
+                              onConfirm: () {
+                                _orderService.deleteOrder(order);
+                                Get.back();
+                              },
+                              barrierDismissible: true,
+                            );
+                          },
+                          child: const Text("Cancel Order"),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

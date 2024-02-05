@@ -15,17 +15,31 @@ class _HomeVendorState extends State<HomeVendor> {
   List<String> checkIds = [];
   List<double> dailySummary = [];
   bool isDataLoaded = false;
+  int pendingOrdersCount = 0;
+  int finishedOrdersCount = 0;
 
   Future<void> getId() async {
-    await FirebaseFirestore.instance.collection('MenuItems').get().then(
-          (snapshot) => snapshot.docs.forEach((element) {
-            checkIds.add(element.reference.id);
-            dailySummary.add((element.data()['count'] ?? 0));
-          }),
-        );
-    setState(() {
-      isDataLoaded = true; // Set the flag to true after data is loaded
+    FirebaseFirestore.instance.collection('MenuItems').get().then((snapshot) {
+      snapshot.docs.forEach((element) {
+        checkIds.add(element.reference.id);
+        dailySummary.add((element.data()['count'] ?? 0));
+        setState(() {
+          isDataLoaded = true;
+        });
+      });
     });
+  }
+
+  Future<void> fetchOrderCounts() async {
+    // Fetch pending orders count
+    QuerySnapshot pendingOrdersSnapshot =
+        await FirebaseFirestore.instance.collection('PendingOrders').get();
+    pendingOrdersCount = pendingOrdersSnapshot.size;
+
+    // Fetch finished orders count
+    QuerySnapshot finishedOrdersSnapshot =
+        await FirebaseFirestore.instance.collection('finished_orders').get();
+    finishedOrdersCount = finishedOrdersSnapshot.size;
   }
 
   @override
@@ -36,13 +50,14 @@ class _HomeVendorState extends State<HomeVendor> {
 
   void startTimer() {
     // Set up a periodic timer to refresh data every 30 seconds
-    Timer.periodic(Duration(seconds: 30), (Timer timer) {
+    Timer.periodic(Duration(seconds: 3), (Timer timer) {
       fetchData();
     });
   }
 
   Future<void> fetchData() async {
     await getId();
+    await fetchOrderCounts();
   }
 
   @override
@@ -55,6 +70,15 @@ class _HomeVendorState extends State<HomeVendor> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildStatBox('Pending Orders', pendingOrdersCount),
+                _buildStatBox('Finished Orders', finishedOrdersCount),
+              ],
+            ),
+            const SizedBox(height: 30),
             Text(
               'Today Sales - $formattedDate',
               style: const TextStyle(
@@ -74,6 +98,37 @@ class _HomeVendorState extends State<HomeVendor> {
               CircularProgressIndicator(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildStatBox(String title, int count) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.blue, // You can change the color as per your preference
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            count.toString(),
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
     );
   }
